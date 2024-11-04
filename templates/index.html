@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BirdCam - Live Stream</title>
+    <!-- Link to the updated CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Using 'Roboto' font -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
+    <link rel="mask-icon" href="{{ url_for('static', filename='safari-pinned-tab.svg') }}" color="#FFFFFF">
+</head>
+<body>
+
+    <main>
+        <!-- Content container (Control Buttons) -->
+        <div class="content-container">
+            <div class="img-container">
+                <img src="{{ url_for('video_feed') }}" alt="Live Stream">
+            </div>
+
+            <!-- Control Buttons -->
+            <div class="controls">
+                <div class="control-row">
+                    <button class="arrow-button" onclick="sendCommand('up', this)">&uarr;</button>
+                </div>
+                <div class="control-row">
+                    <button class="arrow-button" onclick="sendCommand('left', this)">&larr;</button>
+                    <button class="arrow-button" onclick="sendCommand('center', this)">&bull;</button>
+                    <button class="arrow-button" onclick="sendCommand('right', this)">&rarr;</button>
+                </div>
+                <div class="control-row">
+                    <button class="arrow-button" onclick="sendCommand('down', this)">&darr;</button>
+                </div>
+                <!-- OFF and Recordings Buttons -->
+                <div class="control-row">
+                    <button class="shutdown-button" onclick="shutdown()">OFF </button>
+                    <button class="recordings-button" onclick="window.open('https://drive.google.com/drive/folders/1RJ-S0RXS1f7V9XVNF53LK8h312clM3oM?sort=15&direction=d', '_blank')">Recordings</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loading" class="loading-spinner" style="display: none;"></div>
+
+        <!-- Error Message Container -->
+        <div id="error-message" style="display: none;"></div>
+    </main>
+
+    <!-- Footer -->
+    <header>
+        <h1>Trash Panda TV</h1>
+    </header>
+
+    <footer>
+        &copy; 2024 EJB CC by 4.0
+    </footer>
+
+    <script>
+        function sendCommand(command, button) {
+            // Disable the button
+            button.disabled = true;
+            button.classList.add('disabled');
+
+            // Hide any previous error message
+            const errorMessage = document.getElementById('error-message');
+            errorMessage.style.display = 'none';
+            errorMessage.textContent = '';
+
+            // Show loading indicator
+            document.getElementById('loading').style.display = 'block';
+
+            fetch('/control/' + command)
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => { throw new Error(text || 'Server error'); });
+                    }
+                })
+                .catch(error => {
+                    // Display error message
+                    errorMessage.textContent = 'Error: ' + error.message;
+                    errorMessage.style.display = 'block';
+                })
+                .finally(() => {
+                    // Re-enable the button
+                    button.disabled = false;
+                    button.classList.remove('disabled');
+
+                    // Hide loading indicator
+                    document.getElementById('loading').style.display = 'none';
+                });
+        }
+
+        function shutdown() {
+            // Show loading indicator
+            document.getElementById('loading').style.display = 'block';
+
+            fetch('/shutdown')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Shutdown failed');
+                    }
+                })
+                .catch(error => {
+                    // Display error message
+                    const errorMessage = document.getElementById('error-message');
+                    errorMessage.textContent = 'Error: ' + error.message;
+                    errorMessage.style.display = 'block';
+                })
+                .finally(() => {
+                    // Hide loading indicator
+                    document.getElementById('loading').style.display = 'none';
+                });
+        }
+    </script>
+
+</body>
+</html>
