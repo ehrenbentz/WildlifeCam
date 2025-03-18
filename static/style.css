@@ -1,0 +1,361 @@
+/* Reset default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Apply the imported font */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #1a1a1a;
+    color: #ccc;
+    line-height: 1.5;
+}
+
+/* Main content area */
+main {
+    width: 100%;
+    margin: 20px auto;
+    padding: 0 20px;
+    text-align: center;
+}
+
+/* =============================
+   Live Stream and Controls
+   ============================= */
+
+/* Content container for image and controls */
+.content-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+/* Image container styling */
+.img-container {
+    border: 4px solid #555;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 5px 5px 20px 0;
+    flex: 4;
+    max-width: 80%;
+}
+
+.img-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Control buttons */
+.controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    margin-left: auto;
+    flex: 1;
+    max-width: 200px;
+    height: 100%;
+}
+
+.control-row {
+    display: flex;
+    justify-content: center;
+    margin: 5px 0;
+}
+
+.controls button {
+    font-size: 1.2em;
+    padding: 12px 18px;
+    margin: 5px;
+    background-color: #444;
+    color: #fff;
+    border: 1px solid #666;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 60px;
+    min-height: 60px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.controls button.arrow-button {
+    width: 60px;
+    height: 60px;
+}
+
+.controls button.recordings-button {
+    height: 60px;
+    padding: 12px 24px;
+    font-size: 1.2em;
+    margin-top: 40px; /* Additional spacing */
+}
+
+/* Hover and active states for control buttons */
+.controls button:hover {
+    background-color: #555;
+    border-color: #777;
+    transform: translateY(-2px);
+}
+
+.controls button:active {
+    background-color: #666;
+    transform: translateY(2px);
+}
+
+.controls button.disabled {
+    background-color: #333;
+    border-color: #555;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Center button styling */
+.control-row:nth-child(2) button:nth-child(2) {
+    border-radius: 5px;
+    width: 60px;
+    height: 60px;
+    padding: 12px;
+}
+
+/* =============================
+   Single-Column Recordings Page
+   ============================= */
+
+/* Container for the video thumbnails in a single column */
+.recordings-list {
+    display: flex;
+    flex-direction: column;  /* Stack vertically */
+    align-items: center;     /* Center the items horizontally */
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Each video's container */
+.video-container {
+    width: 85%;            /* Slightly narrower than full to add side padding */
+    max-width: 900px;      /* Big enough for large thumbnails on wide screens */
+    background-color: #222;
+    border: 2px solid #555;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.2s ease;
+    margin: 0 auto;        /* Center horizontally */
+}
+
+.video-container:hover {
+    transform: scale(1.02);
+}
+
+/* Thumbnail images */
+.thumbnail {
+    width: 100%;
+    height: auto;
+    max-height: 600px;     /* Large vertical space for big thumbnails */
+    object-fit: cover;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: opacity 0.3s ease;
+}
+
+.thumbnail:hover {
+    opacity: 0.8;
+}
+
+/* Video title styling */
+.video-title {
+    margin-top: 10px;
+    font-size: 1.3em;      /* Larger font for title */
+    font-weight: bold;
+    color: #fff;
+}
+
+/* =============================
+   Lightbox for Video Playback
+   ============================= */
+
+.lightbox {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.lightbox video {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: #fff;
+    font-size: 40px;
+    cursor: pointer;
+    z-index: 1001;
+    transition: color 0.3s ease;
+}
+
+.lightbox-close:hover {
+    color: #f00;
+}
+
+/* =============================
+   Recordings Folder Page
+   ============================= */
+
+/* Folder list container */
+.folder-list {
+    display: flex;
+    flex-direction: column;  /* Stack items vertically */
+    align-items: center;     /* Center items horizontally */
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Folder container (each date folder) */
+.folder-container {
+    width: 85%;
+    max-width: 900px;
+    height: 120px;
+    background-color: #222;
+    border: 2px solid #555;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.folder-container:hover {
+    background-color: #333;
+    transform: scale(1.02);
+}
+
+/* Folder link styling */
+.folder-link {
+    text-decoration: none;
+    color: #fff;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+/* Folder box styling */
+.folder-box {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8em;
+    font-weight: bold;
+    background-color: #333;
+    color: #fff;
+    border-radius: 8px;
+}
+
+/* =============================
+   Sort Buttons
+   ============================= */
+
+.sort-controls {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.sort-button {
+    padding: 15px 30px;
+    font-size: 1.2em;
+    background-color: #444;
+    color: #fff;
+    border: 1px solid #666;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.sort-button:hover {
+    background-color: #555;
+    transform: translateY(-2px);
+}
+
+/* =============================
+   Back Button
+   ============================= */
+
+.back-button {
+    display: block;
+    margin: 20px auto;
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.2em;
+    padding: 10px 20px;
+    border: 1px solid #666;
+    border-radius: 5px;
+    background-color: #444;
+    text-align: center;
+    width: fit-content;
+    transition: all 0.3s ease;
+}
+
+.back-button:hover {
+    color: #00bcd4;
+    background-color: #555;
+    text-decoration: underline;
+}
+
+/* =============================
+   Responsive Tweaks
+   ============================= */
+
+/* For screens <= 600px, let each video container be 95% wide */
+@media (max-width: 600px) {
+    .video-container {
+        width: 95%;
+        max-width: 500px;
+    }
+
+    .thumbnail {
+        max-height: 350px;
+    }
+
+    .folder-container {
+        width: 95%;
+    }
+}
+
+/* For screens <= 800px, stacks the .content-container vertically.
+   Adjust as needed for your design. */
+@media (max-width: 800px) {
+    .content-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .controls {
+        margin-left: 0;
+        margin-top: 20px;
+    }
+
+    .img-container {
+        margin-bottom: 0;
+    }
+}

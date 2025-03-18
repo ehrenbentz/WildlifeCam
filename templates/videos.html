@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ folder }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .header {
+            text-align: left;
+            margin: 20px;
+        }
+
+        .button-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .sort-controls {
+            display: inline-flex;
+            gap: 10px;
+        }
+
+        .sort-button, .back-button {
+            font-size: 1.2em;
+            padding: 10px 20px;
+            cursor: pointer;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 class="header">{{ folder }}</h1>
+
+    <div class="button-container">
+        <!-- Back to Folders button -->
+        <a href="{{ url_for('list_folders') }}" class="back-button">Back to Folders</a>
+
+        <!-- Sort buttons for sorting by most recent or oldest -->
+        <div class="sort-controls">
+            <button onclick="sortVideos('desc')" class="sort-button">Sort by Most Recent</button>
+            <button onclick="sortVideos('asc')" class="sort-button">Sort by Oldest</button>
+        </div>
+    </div>
+
+    <!-- Single-column list of videos/thumbnails -->
+    <div class="recordings-list">
+        {% for video in videos %}
+            <div class="video-container">
+                <img
+                    data-src="{{ url_for('serve_thumbnail', folder=folder, filename=video.replace('.mp4', '.jpg')) }}"
+                    alt="Thumbnail for {{ video }}"
+                    class="thumbnail"
+                    loading="lazy"
+                    onclick="showVideo('{{ url_for('serve_video', folder=folder, filename=video) }}')"
+                    onerror="this.src='/static/default-thumbnail.jpg';"
+                >
+                <p class="video-title">{{ video }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Lightbox overlay -->
+    <div class="lightbox" id="lightbox">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <video id="lightbox-video" controls autoplay></video>
+    </div>
+
+    <script>
+        function showVideo(videoUrl) {
+            const lightbox = document.getElementById('lightbox');
+            const videoPlayer = document.getElementById('lightbox-video');
+            videoPlayer.src = videoUrl;
+            lightbox.style.display = 'flex';
+            videoPlayer.focus();
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            const videoPlayer = document.getElementById('lightbox-video');
+            videoPlayer.pause();
+            videoPlayer.src = '';
+            lightbox.style.display = 'none';
+        }
+
+        // Sort function
+        function sortVideos(order) {
+            const url = new URL(window.location.href);
+            url.searchParams.set('order', order);
+            window.location.href = url.toString();
+        }
+
+        // Intersection Observer for lazy loading thumbnails
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src;
+                        observer.unobserve(img);
+                    }
+                });
+            });
+
+            document.querySelectorAll('img[data-src]').forEach(img => observer.observe(img));
+        });
+    </script>
+
+</body>
+</html>

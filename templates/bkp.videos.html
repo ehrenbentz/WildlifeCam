@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recordings for {{ folder }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <h1>Recordings for {{ folder }}</h1>
+
+    <!-- Single-column list of videos/thumbnails -->
+    <div class="recordings-list">
+        {% for video in videos %}
+            <div class="video-container">
+                <!-- THUMBNAIL: references the serve_thumbnail route -->
+                <img
+                    src="{{ url_for('serve_thumbnail', folder=folder, filename=video.replace('.mp4', '.jpg')) }}"
+                    alt="Thumbnail for {{ video }}"
+                    class="thumbnail"
+                    loading="lazy"
+                    onclick="showVideo('{{ url_for('serve_video', folder=folder, filename=video) }}')"
+                >
+                <!-- Video title below the thumbnail -->
+                <p class="video-title">{{ video }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination block -->
+    <div class="pagination">
+        {% if page > 1 %}
+            <a href="{{ url_for('list_videos', folder=folder, page=page - 1) }}" class="pagination-link">Previous</a>
+        {% endif %}
+
+        <span class="pagination-info">
+            Page {{ page }} of {{ total_pages }}
+        </span>
+
+        {% if page < total_pages %}
+            <a href="{{ url_for('list_videos', folder=folder, page=page + 1) }}" class="pagination-link">Next</a>
+        {% endif %}
+    </div>
+
+    <!-- Lightbox overlay (if you want to show the video in a modal) -->
+    <div class="lightbox" id="lightbox">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <video id="lightbox-video" controls autoplay></video>
+    </div>
+
+    <a href="{{ url_for('list_folders') }}" class="back-button">Back to Folders</a>
+
+    <script>
+        function showVideo(videoUrl) {
+            const lightbox = document.getElementById('lightbox');
+            const videoPlayer = document.getElementById('lightbox-video');
+            videoPlayer.src = videoUrl;
+            lightbox.style.display = 'flex';
+            videoPlayer.focus();
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            const videoPlayer = document.getElementById('lightbox-video');
+            videoPlayer.pause();
+            videoPlayer.src = '';
+            lightbox.style.display = 'none';
+        }
+
+        // Close the lightbox if clicking outside the video
+        document.getElementById('lightbox').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeLightbox();
+            }
+        });
+    </script>
+
+</body>
+</html>

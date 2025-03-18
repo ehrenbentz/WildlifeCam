@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Opossum Cam - Live Stream</title>
+    <!-- Link to the updated CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Using 'Roboto' font -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
+    <link rel="mask-icon" href="{{ url_for('static', filename='safari-pinned-tab.svg') }}" color="#FFFFFF">
+</head>
+<body>
+
+    <main>
+        <!-- Content container (Control Buttons) -->
+        <div class="content-container">
+            <div class="img-container">
+                <img src="{{ url_for('video_feed') }}" alt="Live Stream">
+            </div>
+
+            <!-- Control Buttons -->
+            <div class="controls">
+                <div class="control-row">
+                    <button class="arrow-button" onclick="sendCommand('up', this)">&uarr;</button>
+                </div>
+                <div class="control-row">
+                    <button class="arrow-button" onclick="sendCommand('left', this)">&larr;</button>
+                    <button class="arrow-button" onclick="sendCommand('center', this)">&bull;</button>
+                    <button class="arrow-button" onclick="sendCommand('right', this)">&rarr;</button>
+                </div>
+                <div class="control-row">
+                    <button class="arrow-button" onclick="sendCommand('down', this)">&darr;</button>
+                </div>
+                <!-- Recordings Button -->
+                <div class="control-row">
+                    <button class="recordings-button" onclick="window.location.href='{{ url_for('list_folders') }}'">Recordings</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function sendCommand(command, button) {
+            // Disable the button
+            button.disabled = true;
+            button.classList.add('disabled');
+
+            // Send the command
+            fetch('/control/' + command)
+                .finally(() => {
+                    // Re-enable the button
+                    button.disabled = false;
+                    button.classList.remove('disabled');
+                });
+        }
+    </script>
+
+</body>
+</html>

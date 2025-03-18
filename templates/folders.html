@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recordings</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Recordings</h1>
+    <a href="/" class="back-button">Back to Live Stream</a>
+
+    <div class="folder-list">
+        {% for folder in folders %}
+            <div class="folder-container">
+                <a href="{{ url_for('list_videos', folder=folder) }}" class="folder-link">
+                    <div class="folder-box">
+                        <span class="folder-text">{{ folder }}</span>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+
+</body>
+</html>
